@@ -1,14 +1,21 @@
 {
-  "version": 2,
-  "outputDirectory": "client/dist",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "web": {
+      "root": "client/"
+    },
+    "api": {
+      "root": "server/"
+    }
+  },
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "source": "/api/:match*",
+      "destination": "/api/:match*"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/((?!api/).*)",
+      "destination": "/web/$1"
     }
   ]
 }
