@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" class="anim">
+<head>
+<meta charset="UTF-8">
+<title>Fastshot — Describe an app. We'll build it.</title>
+<meta name="description" content="Fastshot turns a written description into a working app."><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;410;480;500;520&display=block" rel="stylesheet">
+<style>
+/* Reset */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+button,input,textarea{font:inherit;color:inherit;background:none;border:0;}
+img,svg{display:block;}
+:focus-visible{outline:2px solid #F8B285;outline-offset:3px;border-radius:4px;}
+/* Root variables */
+:root{--u:min(0.06410256vw,0.12400794vh);--vu:0.09920635vh;--inset-top:41;--inset-bottom:106;}
+@supports (height:100dvh){:root{--u:min(0.06410256vw,0.12400794dvh);--vu:0.09920635dvh;}}
+@media (min-width:1561px){:root{--inset-top:27;--inset-bottom:74;}}
+/* Typography */
+body{font-family:var(--font-text,Inter,system-ui,Arial,sans-serif);font-synthesis:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:geometricPrecision;overflow:hidden;height:100%;background:#0a0d12;color:#fff;}
+/* Layout */
+.stage{position:fixed;inset:0;overflow:hidden;background:#0a0d12;}
+.stage-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.frame{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;padding:calc(var(--inset-top)*var(--vu)) calc(225*var(--u)) calc(var(--inset-bottom)*var(--vu));}
+/* Nav */
+nav{height:calc(43*var(--u));display:flex;align-items:center;justify-content:space-between;gap:12u;}
+.brand{position:relative;left:var(--brand-x);top:var(--brand-y);display:flex;align-items:center;gap:var(--brand-gap);font-size:var(--brand-fs);font-weight:500;letter-spacing:var(--brand-ls);color:#fff;text-shadow:0 1u 10u rgba(0,0,0,.30);}
+.brand .mark{width:var(--mark);height:var(--mark);position:relative;}
+.brand .mark::before,.brand .mark::after,.brand .mark div{content:"";position:absolute;border-radius:50%;}
+.brand .mark::before{width:100%;height:100%;background:#9C86CE;}
+.brand .mark::after{width:calc(100%*0.53);height:calc(100%*0.53);background:#fff;top:50%;left:50%;transform:translate(-50%,-50%);}
+.brand .mark div{width:calc(100%*0.22);height:calc(100%*0.22);background:#151519;top:50%;left:50%;transform:translate(-50%,-50%);}
+.brand a{color:inherit;text-decoration:none;}
+.nav-center{position:absolute;left:50%;transform:translateX(-50%);top:calc((50.5 - 41)*var(--u));display:flex;gap:var(--links-gap);font-size:var(--links-fs);font-weight:400;letter-spacing:var(--nav-ls);text-shadow:0 1u 12u rgba(0,0,0,.32);}
+.nav-center a{color:#fff;opacity:.72;transition:opacity .18s ease;text-decoration:none;}
+.nav-center a:hover{opacity:1;}
+.get-started{background:linear-gradient(180deg,#3d3d3f 0%,#1d1d20 100%);box-shadow:inset 0 1u 0 rgba(255,255,255,.10),0 2u 14u rgba(0,0,0,.28);border-radius:12u;padding:0 calc(var(--cta-w));font-size:var(--cta-fs);font-weight:520;letter-spacing:var(--cta-ls);color:#fff;cursor:pointer;}
+.get-started span{display:inline-block;transform:translateY(var(--cta-dy));}
+.get-started:hover{filter:brightness(1.16);} .get-started:active{transform:translateY(1px);}
+/* Hero */
+.hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--hero-gap)*var(--vu));padding-bottom:calc(4*var(--vu));text-align:center;}
+.h1{font-size:var(--h1-fs);font-weight:410;line-height:1.10;letter-spacing:var(--display-ls);text-shadow:0 2u 22u rgba(0,0,0,.30);}
+/* Composer Card */
+.card{position:relative;width:min(100%,clamp(516px,74vw,760px));margin-right:3u;background:rgba(41,41,43,.955);backdrop-filter:blur(26u) saturate(112%);box-shadow:inset 0 0 0 1px rgba(214,228,255,.14),0 22u 60u rgba(0,0,0,.30);border-radius:26u;display:flex;flex-direction:column;gap:clamp(20px,3.2vh,44px);padding:clamp(15px,1.9vw,24px);
+}
+.ph{position:absolute;left:calc(var(--ph-x) - var(--card-x));top:calc(var(--ph-y) - var(--card-y));right:24u;color:#8B8C8E;font-size:var(--ph-fs);font-weight:400;line-height:1.35;letter-spacing:var(--body-ls);white-space:nowrap;overflow:hidden;}
+.tools{position:absolute;left:calc(var(--chips-x) - var(--card-x));top:calc(var(--chips-y) - var(--card-y));height:var(--chip-h);display:flex;align-items:center;gap:var(--chip-gap);}
+.chip{height:var(--chip-h);border-radius:var(--chip-r);font-size:var(--chip-fs);font-weight:500;color:#909093;background:linear-gradient(180deg,rgba(255,255,255,.088) 0%,rgba(255,255,255,.050) 45%,rgba(255,255,255,.038) 100%);border:1px solid rgba(255,255,255,.05);display:flex;align-items:center;padding:0 clamp(7px,1vw,13px);gap:5.5u;cursor:pointer;}
+.chip:hover{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.07));color:#c8c8cb;}
+.chip svg{width:var(--chip-icon-width);height:auto;fill:currentColor;}
+.right{position:absolute;inset:0;pointer-events:none;}
+.right>*{position:absolute;pointer-events:auto;}
+.model{left:calc(var(--son-fs) * 0 + var(--son-top)*0 + var(--send-x) - var(--chips-x));top:calc(var(--son-top) * 1u);font-size:var(--son-fs);font-weight:400;color:#98999C;display:inline-flex;align-items:center;gap:var(--chev-gap);}
+.model::after{content:"";display:inline-block;width:var(--chev-x);height:6.8u;background:currentColor;mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L1 0 L0.5 1 Z" fill="#000000"/></svg>') no-repeat center/contain;}
+.attach{left:calc(var(--att-x) - var(--chips-x));top:calc(var(--att-y) - var(--chips-y));color:#A9AAAD;cursor:pointer;}
+.attach:hover{color:#fff;}
+.send{left:calc(var(--send-x) - var(--chips-x));top:calc(var(--send-y) - var(--chips-y));width:var(--send-d);height:var(--send-d);background:linear-gradient(163deg,#FBBC94 0%,#F49D70 46%,#E88654 100%);border-radius:50%;box-shadow:0 3u 12u rgba(210,110,60,.34);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.send::before{content:"";display:block;width:11.66u;height:11.66u;background:currentColor;mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2l-5 9h10l-5-9z" fill="#000000"/></svg>') no-repeat center/contain;}
+/* Footer */
+.proof{display:flex;flex-direction:column;align-items:center;gap:calc(52.3*var(--vu));margin-top:auto;}
+.by{font-size:var(--by-fs);font-weight:480;letter-spacing:var(--proof-ls);color:rgba(255,255,255,.95);text-shadow:0 1u 12u rgba(0,0,0,.35);}
+.logos{display:flex;gap:var(--logo-gap);filter:drop-shadow(0 1u 10u rgba(0,0,0,.30));}
+.logos svg{width:var(--logo-size,auto);height:auto;fill:#fff;}
+/* Responsive */
+@media (min-width:600px) and (max-width:1180px) and (min-height:600px){
+  :root{--u:1px;}
+  .frame{padding:clamp(24px,3.4vh,44px) clamp(28px,4.2vw,60px) clamp(26px,4.4vh,56px);}
+  .h1{font-size:clamp(27px,4.3vw,44px);line-height:1.12;}
+  .tools{position:static;height:auto;display:flex;flex-direction:row;gap:clamp(10px,1.4vw,18px);} 
+  .right{position:static;display:flex;align-items:center;margin-left:auto;gap:0;}
+  .right>*{position:static;}
+}
+@media (max-width:599px), (max-height:599px) and (max-width:1180px){
+  :root{--u:1px;}
+  .frame{padding:max(18px,env(safe-area-inset-top)) max(clamp(18px,5.2vw,40px),env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(clamp(18px,5.2vw,40px),env(safe-area-inset-left));}
+  .nav-center{display:none;}
+  .get-started{display:none;}
+  .brand{font-size:30px;}
+  .tools{flex-direction:column;align-items:stretch;gap:12px;}
+  .right{position:static;display:flex;align-items:center;justify-content:flex-start;}
+  .attach{margin-left:auto;}
+  .send{margin-left:14px;width:40px;height:40px;}
+}
+/* Entrance animation */
+html.anim *{animation-fill-mode:both;}
+@keyframes e-settle-down{0%{opacity:0;transform:translateY(-5u);}100%{opacity:1;transform:none;}}
+@keyframes e-settle-up{0%{opacity:0;transform:translateY(6u);}100%{opacity:1;transform:none;}}
+@keyframes e-mark{0%{transform:scale(.9);}100%{transform:none;}}
+@keyframes e-focus{0%{opacity:0;transform:translateY(14u) blur(6u);}100%{opacity:1;transform:none blur(0);}}
+@keyframes e-panel{0%{opacity:0;transform:translateY(18u) scale(.985);}100%{opacity:1;transform:none;}}
+@keyframes e-populate{0%{opacity:0;transform:translateY(4u);}100%{opacity:1;transform:none;}}
+@keyframes e-send{0%{transform:scale(.82);}100%{transform:none;}}
+.brand{animation:e-settle-down .58s cubic-bezier(.22,1,.36,1) .06s;}
+.mark{animation:e-mark .62s cubic-bezier(.16,1,.3,1) .06s;}
+.nav-center a{animation:e-settle-down .50s cubic-bezier(.22,1,.36,1) .16s;animation-delay:calc(.16s * var(--i));}
+.get-started{animation:e-settle-down .55s cubic-bezier(.22,1,.36,1) .34s;}
+.h1{animation:e-focus 1.00s cubic-bezier(.16,1,.3,1) .30s;}
+.card{animation:e-panel .90s cubic-bezier(.16,1,.3,1) .62s;}
+.ph{animation:e-populate .50s cubic-bezier(.22,1,.36,1) .88s;}
+.tools .chip{animation:e-populate .50s cubic-bezier(.22,1,.36,1) .94s;}
+.right{animation:e-populate .50s cubic-bezier(.22,1,.36,1) 1.00s;}
+.send{animation:e-send .50s cubic-bezier(.16,1,.3,1) 1.00s;}
+.proof{animation:e-settle-up .55s cubic-bezier(.22,1,.36,1) 1.08s;}
+.logos svg{animation:e-settle-up .55s cubic-bezier(.22,1,.36,1) 1.16s;animation-delay:calc(.06s * var(--i));}
+@media (prefers-reduced-motion: reduce){html.anim *{animation-duration:.01ms;}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <video class="stage-video" autoplay muted loop playsinline src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_124724_bc041163-d651-425f-aea3-2acc1efc2c96.mp4"></video>
+  <div class="frame">
+    <nav class="nav">
+      <div class="brand"><a href="#" aria-label="Fastshot home"><div class="mark"><div></div></div>Fastshot</a></div>
+      <div class="nav-center">
+        <a href="#" style="--i:0;">Features</a>
+        <a href="#" style="--i:1;">Examples</a>
+        <a href="#" style="--i:2;">Pricing</a>
+        <a href="#" style="--i:3;">Docs</a>
+      </div>
+      <div class="get-started"><span>Get Started</span></div>
+    </nav>
+    <main class="hero">
+      <h1 class="h1">Describe an app. We'll build it.</h1>
+      <form class="card" onsubmit="return false;">
+        <p class="ph">Build a fintech tracking app with bank level privacy and...</p>
+        <div class="tools">
+          <div class="chips">
+            <div class="chip"><svg viewBox="0 0 24 24"><path d="M12 2l-5 9h10l-5-9z"/></svg><span>Attach Screens</span></div>
+            <div class="chip"><svg viewBox="0 0 24 24"><path d="M12 2l-5 9h10l-5-9z"/></svg><span>Attach a Figma</span></div>
+            <div class="chip"><svg viewBox="0 0 24 24"><path d="M12 2l-5 9h10l-5-9z"/></svg><span>Today's Theme</span></div>
+          </div>
+          <div class="right">
+            <div class="model" aria-label="Model selector">Sonnet 4.5</div>
+            <div class="attach" aria-label="Attach"><svg viewBox="0 0 24 24"><path d="M12 2l-5 9h10l-5-9z"/></svg></div>
+            <button type="button" class="send" aria-label="Build it"></button>
+          </div>
+        </div>
+      </form>
+    </main>
+    <footer class="proof">
+      <div class="by">Built by engineers from</div>
+      <div class="logos">
+        <svg viewBox="0 0 100 20"><text x="0" y="15" fill="#fff" font-family="Inter" font-size="15">Google</text></svg>
+        <svg viewBox="0 0 100 20"><text x="0" y="15" fill="#fff" font-family="Inter" font-size="15">Cisco</text></svg>
+        <svg viewBox="0 0 100 20"><text x="0" y="15" fill="#fff" font-family="Inter" font-size="15">Adobe</text></svg>
+      </div>
+    </footer>
+  </div>
+</div>
+<script>
+  // Entrance teardown
+  document.addEventListener('DOMContentLoaded', function(){
+    const html = document.documentElement;
+    const removeAnim = () => {html.classList.remove('anim');};
+    const timeout = setTimeout(removeAnim,2600);
+    html.addEventListener('animationend', (e)=>{if(e.animationName==='e-settle-up' && e.target===html){clearTimeout(timeout);removeAnim();}}, {once:true});
+  });
+</script>
+</body>
+</html>
